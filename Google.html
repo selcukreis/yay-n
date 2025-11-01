@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SelçukSpor | Canlı TV Yayınları</title>
+
+<link href="https://vjs.zencdn.net/7.21.1/video-js.css" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --accent1: #00b4ff;
+    --accent2: #a855f7;
+    --bg-dark: #070b14;
+    --panel: #10172a;
+    --text: #fff;
+    --muted: #9da7c2;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: "Poppins", sans-serif;
+    background: var(--bg-dark);
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  header {
+    background: linear-gradient(90deg, var(--accent1), var(--accent2));
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  }
+
+  header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    text-shadow: 0 0 10px rgba(255,255,255,0.6);
+  }
+
+  .search-box input {
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    background: rgba(255,255,255,0.2);
+    color: #fff;
+    font-size: 1rem;
+    width: 250px;
+    transition: all 0.3s ease;
+  }
+
+  .search-box input::placeholder {
+    color: #ddd;
+  }
+
+  .search-box input:focus {
+    background: rgba(255,255,255,0.3);
+    box-shadow: 0 0 10px rgba(255,255,255,0.5);
+  }
+
+  #player-container {
+    width: 100%;
+    max-width: 1280px;
+    margin: 2rem auto;
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 0 35px rgba(0,180,255,0.3);
+  }
+
+  .video-js {
+    width: 100% !important;
+    height: 70vh !important;
+    border-radius: 20px;
+  }
+
+  #current-channel {
+    position: absolute;
+    top: 12px;
+    left: 16px;
+    background: rgba(0,0,0,0.6);
+    padding: 6px 12px;
+    border-radius: 8px;
+    color: var(--accent1);
+    font-weight: 600;
+    text-shadow: 0 0 8px rgba(0,180,255,0.8);
+  }
+
+  .channel-section {
+    background: linear-gradient(180deg, #0d1324, #090c16);
+    border-top: 2px solid rgba(255,255,255,0.08);
+    padding: 2rem 1rem 4rem;
+    border-radius: 25px 25px 0 0;
+  }
+
+  .section-title {
+    text-align: center;
+    color: var(--accent1);
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 1.8rem;
+    text-shadow: 0 0 8px rgba(0,180,255,0.4);
+  }
+
+  .channel-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1.2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .channel-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    text-align: center;
+    padding: 1rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .channel-card img {
+    width: 100%;
+    height: 90px;
+    object-fit: contain;
+    margin-bottom: 0.7rem;
+    filter: brightness(0.9);
+    transition: all 0.3s;
+  }
+
+  .channel-card h3 {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #fff;
+  }
+
+  .channel-card:hover img {
+    transform: scale(1.05);
+  }
+
+  .channel-card:hover {
+    transform: translateY(-6px) scale(1.03);
+    box-shadow: 0 0 20px rgba(0,180,255,0.4);
+    border-color: var(--accent1);
+    background: rgba(0,180,255,0.08);
+  }
+
+  footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.9rem;
+    padding: 1rem;
+    background: #070b14;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+
+  @media (max-width: 768px) {
+    header {
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .video-js {
+      height: 50vh !important;
+    }
+
+    .search-box input {
+      width: 100%;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>SelçukSpor Canlı Yayın</h1>
+  <div class="search-box">
+    <input type="text" id="search" placeholder="Kanal ara... (bein, ssport, tivibu)">
+  </div>
+</header>
+
+<section id="player-container">
+  <div id="current-channel">Kanal seçilmedi</div>
+  <video id="video-player" class="video-js vjs-default-skin" controls preload="auto" playsinline></video>
+</section>
+
+<section class="channel-section">
+  <div class="section-title">📺 Tüm Kanallar</div>
+  <div class="channel-grid" id="channel-list"></div>
+</section>
+
+<footer>© 2025 SelçukSpor — Gençlerin Canlı Yayın Platformu 💥</footer>
+
+<script src="https://vjs.zencdn.net/7.21.1/video.min.js"></script>
+<script>
+const channels = [
+  { name: "Bein Sports 1", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Bein_sport_logo.png/960px-Bein_sport_logo.png", url: "https://dga1op10s1u4lep.f80fcd777993c210.live/live/selcukobs1/playlist.m3u8" },
+  { name: "Bein Sports 2", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Bein_sport_logo.png/960px-Bein_sport_logo.png", url: "https://dga1op10s1u4lep.f80fcd777993c210.live/live/selcukbeinsports2/playlist.m3u8" },
+  { name: "Bein Sports 3", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Bein_sport_logo.png/960px-Bein_sport_logo.png", url: "https://dga1op10s1u4lep.f80fcd777993c210.live/live/selcukbeinsports3/playlist.m3u8" },
+  { name: "S Sport", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Ssport-plus-.png/1200px-Ssport-plus-.png", url: "https://dga1op10s1u4lep.f80fcd777993c210.live/live/selcukssport/playlist.m3u8" },
+  { name: "S Sport 2", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Ssport-plus-.png/1200px-Ssport-plus-.png", url: "https://dga1op10s1u4lep.f80fcd777993c210.live/live/selcukssport2/playlist.m3u8" },
+  { name: "Tivibu Spor 1", logo: "https://w1.pngwing.com/pngs/581/739/png-transparent-champions-league-logo-uefa-europa-league-europe-tivibu-spor-football-television-sports-uefa-champions-league.png", url: "https://dga1op10s1u4lep.f80fcd777993c210.live/live/selcuktivibuspor1/playlist.m3u8" },
+  { name: "Tivibu Spor 2", logo: "https://w1.pngwing.com/pngs/581/739/png-transparent-champions-league-logo-uefa-europa-league-europe-tivibu-spor-football-television-sports-uefa-champions-league.png", url: "https://dga1op10s1u4lep.f80fcd777993c210.live/live/selcuktivibuspor2/playlist.m3u8" },
+  { name: "Tivibu Spor 4", logo: "https://w1.pngwing.com/pngs/581/739/png-transparent-champions-league-logo-uefa-europa-league-europe-tivibu-spor-football-television-sports-uefa-champions-league.png", url: "https://dga1op10s1u4lep.f80fcd777993c210.live/live/selcuktivibuspor4/playlist.m3u8" }
+];
+
+const player = videojs('video-player');
+const list = document.getElementById('channel-list');
+const search = document.getElementById('search');
+const label = document.getElementById('current-channel');
+
+function render(filter="") {
+  list.innerHTML = "";
+  channels
+    .filter(c => c.name.toLowerCase().includes(filter.toLowerCase()))
+    .forEach(c => {
+      const div = document.createElement("div");
+      div.className = "channel-card";
+      div.innerHTML = `<img src="${c.logo}" alt="${c.name}"><h3>${c.name}</h3>`;
+      div.onclick = () => loadChannel(c);
+      list.appendChild(div);
+    });
+}
+
+function loadChannel(ch) {
+  label.textContent = ch.name;
+  player.src({ src: ch.url, type: "application/x-mpegURL" });
+  player.play();
+}
+
+search.addEventListener("input", e => render(e.target.value));
+render();
+</script>
+</body>
+</html>
